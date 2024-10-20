@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Stream</title>
+    <style>
+        /* CSS to set the height and width of the video */
+        video {
+            width: 100vw;  /* 100% of the viewport width */
+            height: 100vh; /* 100% of the viewport height */
+            object-fit: cover; /* Optional: Ensures the video covers the element's box */
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Video Stream</h1>
+    <video id="video" controls autoplay>
+        <source src="/video/stream.m3u8" type="application/x-mpegURL">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Include hls.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        const video = document.getElementById('video');
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource('/video/stream.m3u8');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = '/video/stream.m3u8';
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    </script>
+</body>
+</html>
